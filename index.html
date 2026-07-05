@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Palimpsest — layered maps of the UK</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body>
+  <div id="sidebar">
+    <header>
+      <h1>Palimpsest</h1>
+      <p class="tagline">Layered maps of the UK — overlay, compare, scroll through time.</p>
+    </header>
+
+    <section class="panel">
+      <h2>View</h2>
+      <div id="mode-switch" class="seg">
+        <button data-mode="single" class="active">Single</button>
+        <button data-mode="dual">Side by side</button>
+        <button data-mode="swipe">Swipe</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Base maps</h2>
+      <label class="base-row">
+        <span id="base-a-label">Map</span>
+        <select id="base-a"></select>
+      </label>
+      <label class="base-row" id="base-b-row" hidden>
+        <span>Right</span>
+        <select id="base-b"></select>
+      </label>
+    </section>
+
+    <section class="panel">
+      <h2>Layers</h2>
+      <div id="layer-list"></div>
+    </section>
+
+    <section class="panel" id="legend-panel" hidden>
+      <h2>Legend</h2>
+      <div id="legend"></div>
+    </section>
+
+    <footer>
+      <a href="https://github.com/SamCousinsGB/palimpsest" target="_blank" rel="noopener">Source &amp; docs</a>
+    </footer>
+  </div>
+
+  <div id="stage">
+    <div id="maps" class="mode-single">
+      <div id="map-a" class="map"></div>
+      <div id="map-b" class="map" hidden></div>
+      <div id="swipe-divider" hidden><div class="grip"></div></div>
+    </div>
+    <div id="timeline" hidden>
+      <label class="tl-toggle"><input type="checkbox" id="tl-enable" /> <span id="tl-title">Timeline</span></label>
+      <input type="range" id="tl-slider" disabled />
+      <span id="tl-year" class="tl-year">—</span>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

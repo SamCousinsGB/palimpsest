@@ -1,0 +1,42 @@
+{
+  "id": "norse-settlements",
+  "name": "Norse settlements (NW England)",
+  "description": "Scandinavian settlement of Merseyside, Wirral and west Lancashire, evidenced by place-names. Centres on the Hiberno-Norse colony founded after Ingimund's expulsion from Dublin, c.902 AD. Coloured by Old Norse name element.",
+  "type": "geojson",
+  "data": "data.geojson",
+  "attribution": "Norse settlements: place-name evidence (EPNS; Harding, Viking Mersey; Domesday Book)",
+  "styleBy": "group",
+  "style": {
+    "default": { "color": "#c8a24b" },
+    "categories": {
+      "thing": { "color": "#9b59d0", "label": "þing — assembly site" },
+      "by": { "color": "#d64545", "label": "-bý — farm / settlement" },
+      "kirk": { "color": "#2e9e6b", "label": "kirkja — church" },
+      "stath": { "color": "#e08a2e", "label": "stǫð — landing place" },
+      "erg": { "color": "#b8b32a", "label": "erg / ærgi — shieling (via Gaelic)" },
+      "gaelic": { "color": "#3aa8a8", "label": "Gaelic-Norse name" },
+      "landscape": { "color": "#4a7fd4", "label": "landscape name (melr, dalr, lundr…)" },
+      "hybrid": { "color": "#c774a8", "label": "Norse + Old English hybrid" }
+    }
+  },
+  "fillBy": {
+    "field": "certainty",
+    "values": { "high": 0.85, "probable": 0.45, "possible": 0.1 }
+  },
+  "legendNote": "Fill strength shows scholarly certainty: solid = consensus Norse name, faint = probable, hollow = disputed. Click any marker for etymology and first attestation.",
+  "markers": { "radius": 7 },
+  "popup": [
+    { "field": "name", "label": "" },
+    { "field": "element", "label": "Element" },
+    { "field": "etymology", "label": "Etymology" },
+    { "field": "attestedForm", "label": "First recorded" },
+    { "field": "certainty", "label": "Certainty" },
+    { "field": "notes", "label": "Notes" }
+  ],
+  "time": {
+    "field": "attested",
+    "label": "First documented by year",
+    "min": 1080,
+    "max": 1300
+  }
+}
