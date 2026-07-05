@@ -180,6 +180,28 @@ body { display: flex; }
   color: #1b1d22; font-size: 17px; font-weight: 700;
 }
 
+/* ---------- linked crosshair (dual mode) ---------- */
+
+.xhair { pointer-events: none; }
+.xhair::before, .xhair::after {
+  content: "";
+  position: absolute;
+  background: var(--accent);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.45);
+}
+.xhair::before { left: 50%; top: 0; width: 2px; height: 100%; transform: translateX(-50%); }
+.xhair::after { top: 50%; left: 0; height: 2px; width: 100%; transform: translateY(-50%); }
+.xhair .dot {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 8px; height: 8px;
+  margin: -4px 0 0 -4px;
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+  background: rgba(27, 29, 34, 0.5);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.45);
+}
+
 /* ---------- timeline ---------- */
 
 #timeline {

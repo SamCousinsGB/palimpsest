@@ -11,42 +11,66 @@
 // aligned with modern panes at every zoom. All layers are EPSG:3857.
 const MAX_ZOOM = 19;
 const BASES = {
-  osm: { name: "OpenStreetMap", group: "Modern",
+  osm: { name: "OpenStreetMap", group: "Street & general",
     url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
     attribution: "&copy; OpenStreetMap contributors", maxNativeZoom: 19 },
-  hot: { name: "OSM Humanitarian", group: "Modern",
+  hot: { name: "OSM Humanitarian", group: "Street & general",
     url: "https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png",
     attribution: "&copy; OpenStreetMap contributors, Humanitarian OSM Team", maxNativeZoom: 19 },
-  cyclosm: { name: "CyclOSM", group: "Modern",
+  osmfr: { name: "OSM France", group: "Street & general",
+    url: "https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png",
+    attribution: "&copy; OpenStreetMap contributors, OSM France", maxNativeZoom: 20 },
+  osmde: { name: "OSM Germany", group: "Street & general",
+    url: "https://{s}.tile.openstreetmap.de/{z}/{x}/{y}.png",
+    attribution: "&copy; OpenStreetMap contributors, OSM Deutschland", maxNativeZoom: 18 },
+  cyclosm: { name: "CyclOSM (cycling)", group: "Street & general",
     url: "https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png",
     attribution: "&copy; OpenStreetMap contributors | CyclOSM", maxNativeZoom: 19 },
-  light: { name: "Carto Light", group: "Modern",
+  opnv: { name: "ÖPNVKarte (transit)", group: "Street & general",
+    url: "https://tileserver.memomaps.de/tilegen/{z}/{x}/{y}.png",
+    attribution: "&copy; OpenStreetMap contributors | MeMoMaps", maxNativeZoom: 18 },
+  light: { name: "Carto Light", group: "Street & general",
     url: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
     attribution: "&copy; OpenStreetMap contributors &copy; CARTO", maxNativeZoom: 20 },
-  dark: { name: "Carto Dark", group: "Modern",
+  positron: { name: "Carto Light (no labels)", group: "Street & general",
+    url: "https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png",
+    attribution: "&copy; OpenStreetMap contributors &copy; CARTO", maxNativeZoom: 20 },
+  dark: { name: "Carto Dark", group: "Street & general",
     url: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
     attribution: "&copy; OpenStreetMap contributors &copy; CARTO", maxNativeZoom: 20 },
-  voyager: { name: "Carto Voyager", group: "Modern",
+  voyager: { name: "Carto Voyager", group: "Street & general",
     url: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
     attribution: "&copy; OpenStreetMap contributors &copy; CARTO", maxNativeZoom: 20 },
-  topo: { name: "OpenTopoMap (terrain)", group: "Modern",
-    url: "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
-    attribution: "&copy; OpenStreetMap contributors, SRTM | &copy; OpenTopoMap (CC-BY-SA)", maxNativeZoom: 17 },
-  imagery: { name: "Esri Satellite", group: "Modern",
-    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-    attribution: "Esri, Maxar, Earthstar Geographics", maxNativeZoom: 19 },
-  esritopo: { name: "Esri Topographic", group: "Modern",
-    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
-    attribution: "Esri", maxNativeZoom: 19 },
-  esristreet: { name: "Esri Street", group: "Modern",
+  esristreet: { name: "Esri Street", group: "Street & general",
     url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
     attribution: "Esri", maxNativeZoom: 19 },
-  esrinatgeo: { name: "Esri National Geographic", group: "Modern",
-    url: "https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}",
-    attribution: "Esri, National Geographic", maxNativeZoom: 16 },
-  esrigray: { name: "Esri Light Gray", group: "Modern",
+  esrigray: { name: "Esri Light Gray", group: "Street & general",
     url: "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
     attribution: "Esri", maxNativeZoom: 16 },
+  imagery: { name: "Esri Satellite", group: "Terrain, relief & aerial",
+    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    attribution: "Esri, Maxar, Earthstar Geographics", maxNativeZoom: 19 },
+  topo: { name: "OpenTopoMap", group: "Terrain, relief & aerial",
+    url: "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
+    attribution: "&copy; OpenStreetMap contributors, SRTM | &copy; OpenTopoMap (CC-BY-SA)", maxNativeZoom: 17 },
+  esritopo: { name: "Esri Topographic", group: "Terrain, relief & aerial",
+    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
+    attribution: "Esri", maxNativeZoom: 19 },
+  esrinatgeo: { name: "Esri National Geographic", group: "Terrain, relief & aerial",
+    url: "https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}",
+    attribution: "Esri, National Geographic", maxNativeZoom: 16 },
+  esrirelief: { name: "Esri Shaded Relief", group: "Terrain, relief & aerial",
+    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}",
+    attribution: "Esri", maxNativeZoom: 13 },
+  esriterrain: { name: "Esri Terrain", group: "Terrain, relief & aerial",
+    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/{z}/{y}/{x}",
+    attribution: "Esri, USGS, NOAA", maxNativeZoom: 13 },
+  esriphysical: { name: "Esri Physical", group: "Terrain, relief & aerial",
+    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/{z}/{y}/{x}",
+    attribution: "Esri, US National Park Service", maxNativeZoom: 8 },
+  esriocean: { name: "Esri Ocean", group: "Terrain, relief & aerial",
+    url: "https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}",
+    attribution: "Esri, GEBCO, NOAA, National Geographic", maxNativeZoom: 13 },
   nls1inch: { name: "OS 1-inch 1885–1900", group: "Historical (NLS)",
     url: "https://mapseries-tilesets.s3.amazonaws.com/1inch_2nd_ed/{z}/{x}/{y}.png",
     attribution: "Historical map &copy; National Library of Scotland", maxNativeZoom: 15 },
@@ -68,6 +92,7 @@ const baseLayers = { a: null, b: null };
 let mode = "single"; // single | dual | swipe
 let modules = []; // { id, dir, manifest, data, on:{a,b}, leaflet:{a,b}, fitted }
 let swipeX = null;
+const xhair = { a: null, b: null }; // linked crosshair marker, shown ON maps[side]
 
 const timeline = { enabled: false, year: null, min: null, max: null };
 
@@ -109,12 +134,53 @@ function attachSync() {
   maps.b.sync(maps.a);
 }
 
+// ---------------------------------------------------------------- crosshair
+
+const XHAIR_ICON = L.divIcon({ className: "xhair", iconSize: [30, 30], html: '<div class="dot"></div>' });
+
+function showXhair(side, latlng) {
+  const map = maps[side];
+  if (!map) return;
+  if (!xhair[side]) {
+    xhair[side] = L.marker(latlng, {
+      icon: XHAIR_ICON,
+      interactive: false,
+      keyboard: false,
+      zIndexOffset: 1000,
+    }).addTo(map);
+  } else {
+    xhair[side].setLatLng(latlng);
+  }
+}
+
+function hideXhair(side) {
+  if (xhair[side]) {
+    maps[side].removeLayer(xhair[side]);
+    xhair[side] = null;
+  }
+}
+
+// In side-by-side mode, hovering one pane mirrors a crosshair onto the other at
+// the same geographic coordinate — so you can pin exactly where a point on one
+// map falls on the other. The synced view guarantees it lands at the right spot.
+function initCrosshairs() {
+  const link = (src, tgt) => {
+    maps[src].on("mousemove", (e) => {
+      if (mode === "dual") showXhair(tgt, e.latlng);
+    });
+    maps[src].on("mouseout", () => hideXhair(tgt));
+  };
+  link("a", "b");
+  link("b", "a");
+}
+
 function ensureMapB() {
   if (maps.b) return;
   mapBEl.hidden = false;
   maps.b = makeMap("map-b");
   setBase("b", $("#base-b").value);
   attachSync();
+  initCrosshairs();
   // start the right pane with the same overlays as the left
   for (const mod of modules) {
     if (mod.on.a && !mod.on.b) {
@@ -140,6 +206,7 @@ function setMode(next) {
   dividerEl.hidden = next !== "swipe";
   $("#dual-divider").hidden = next !== "dual";
   mapBEl.style.clipPath = "";
+  if (next !== "dual") { hideXhair("a"); hideXhair("b"); }
 
   if (compare) ensureMapB();
 

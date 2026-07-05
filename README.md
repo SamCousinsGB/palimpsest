@@ -15,12 +15,21 @@ patterns and settlement logic.
 - **Three view modes** — single map; **side by side** (two panes locked to a
   pixel-identical view via Leaflet.Sync, independent base maps and layers on
   each); **swipe** (draggable divider, NLS-style).
-- **15 base maps** — 12 modern (OpenStreetMap, OSM Humanitarian, CyclOSM,
-  Carto Light/Dark/Voyager, OpenTopoMap terrain, and Esri Satellite / Topo /
-  Street / National Geographic / Light Gray) and 3 historical from the National
-  Library of Scotland (OS 1-inch 1885–1900, Bartholomew GB half-inch ~1900,
-  OS 1:10,560 1940s–60s). Historical sheets upscale past their native zoom so
-  they stay aligned with modern maps at any zoom.
+- **Linked crosshair** — in side-by-side, hovering one pane mirrors a crosshair
+  onto the other at the exact same coordinate, so you can pin precisely where a
+  point on one map falls on the other.
+- **23 base maps** in three groups, every URL probe-verified to serve real
+  tiles:
+  - *Street & general* — OpenStreetMap, OSM Humanitarian, OSM France, OSM
+    Germany, CyclOSM, ÖPNVKarte transit, Carto Light / Light-no-labels / Dark /
+    Voyager, Esri Street, Esri Light Gray.
+  - *Terrain, relief & aerial* — Esri Satellite, OpenTopoMap, Esri Topographic /
+    National Geographic / Shaded Relief / Terrain / Physical / Ocean.
+  - *Historical (NLS)* — OS 1-inch 1885–1900, Bartholomew GB half-inch ~1900,
+    OS 1:10,560 1940s–60s.
+
+  Historical sheets upscale past their native zoom so they stay aligned with
+  modern maps at any zoom.
 - **Modular layer library** — every layer is a self-contained folder under
   `layers/`. Add a folder, add one line to the registry, done.
 - **Timeline** — any layer that declares a time field gets a year slider
