@@ -12,11 +12,15 @@ patterns and settlement logic.
 
 ## Features
 
-- **Three view modes** — single map; **side by side** (two synced panes,
-  independent base maps and layers on each); **swipe** (draggable divider,
-  NLS-style).
-- **Base maps** — OpenStreetMap, Carto Light, OpenTopoMap terrain, Esri
-  satellite, and the NLS OS one-inch (1885–1900) historical sheet.
+- **Three view modes** — single map; **side by side** (two panes locked to a
+  pixel-identical view via Leaflet.Sync, independent base maps and layers on
+  each); **swipe** (draggable divider, NLS-style).
+- **15 base maps** — 12 modern (OpenStreetMap, OSM Humanitarian, CyclOSM,
+  Carto Light/Dark/Voyager, OpenTopoMap terrain, and Esri Satellite / Topo /
+  Street / National Geographic / Light Gray) and 3 historical from the National
+  Library of Scotland (OS 1-inch 1885–1900, Bartholomew GB half-inch ~1900,
+  OS 1:10,560 1940s–60s). Historical sheets upscale past their native zoom so
+  they stay aligned with modern maps at any zoom.
 - **Modular layer library** — every layer is a self-contained folder under
   `layers/`. Add a folder, add one line to the registry, done.
 - **Timeline** — any layer that declares a time field gets a year slider
@@ -93,7 +97,8 @@ node tools/geocode.mjs tools/places-my-layer.json layers/my-layer/data.geojson
 ## Roadmap
 
 - Georeferenced historical overlays (tithe maps, estate plans) as tile modules
-- More NLS base sheets (6-inch, 25-inch) via MapTiler-hosted NLS tilesets
+- More NLS base sheets (6-inch, 25-inch) — these sit behind MapTiler API keys
+  now, so they need a key wired in
 - Line/polygon modules (Roman roads, drainage and sewer networks, hundred boundaries)
 - Time *ranges* per feature (existed from–to) alongside the current attested-by model
 - Permalink state (mode, layers, year, viewport in the URL hash)

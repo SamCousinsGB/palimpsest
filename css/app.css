@@ -136,9 +136,20 @@ body { display: flex; }
 /* single: A fills */
 #maps.mode-single #map-a { flex: 1; }
 
-/* dual: split 50/50 */
-#maps.mode-dual #map-a, #maps.mode-dual #map-b { flex: 1; position: relative; }
-#maps.mode-dual #map-b { border-left: 2px solid var(--accent); }
+/* dual: split 50/50 — panes must be EXACTLY equal for pixel-accurate compare,
+   so the divider is an overlay line, not a border that eats into a pane. */
+#maps.mode-dual #map-a, #maps.mode-dual #map-b { flex: 1 1 50%; width: 50%; position: relative; }
+
+#dual-divider {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 50%;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--accent);
+  z-index: 500;
+  pointer-events: none;
+}
 
 /* swipe: B stacked over A, clipped */
 #maps.mode-swipe { display: block; }

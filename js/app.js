@@ -6,37 +6,56 @@
 
 // ---------------------------------------------------------------- base maps
 
+// maxNativeZoom = the deepest zoom the tileset actually serves; Leaflet upscales
+// past it so historical layers stay visible (blurry) when zoomed in and stay
+// aligned with modern panes at every zoom. All layers are EPSG:3857.
+const MAX_ZOOM = 19;
 const BASES = {
-  osm: {
-    name: "OpenStreetMap",
+  osm: { name: "OpenStreetMap", group: "Modern",
     url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-    attribution: "&copy; OpenStreetMap contributors",
-    maxZoom: 19,
-  },
-  light: {
-    name: "Light (Carto)",
+    attribution: "&copy; OpenStreetMap contributors", maxNativeZoom: 19 },
+  hot: { name: "OSM Humanitarian", group: "Modern",
+    url: "https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png",
+    attribution: "&copy; OpenStreetMap contributors, Humanitarian OSM Team", maxNativeZoom: 19 },
+  cyclosm: { name: "CyclOSM", group: "Modern",
+    url: "https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png",
+    attribution: "&copy; OpenStreetMap contributors | CyclOSM", maxNativeZoom: 19 },
+  light: { name: "Carto Light", group: "Modern",
     url: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-    attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
-    maxZoom: 20,
-  },
-  topo: {
-    name: "Terrain (OpenTopoMap)",
+    attribution: "&copy; OpenStreetMap contributors &copy; CARTO", maxNativeZoom: 20 },
+  dark: { name: "Carto Dark", group: "Modern",
+    url: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+    attribution: "&copy; OpenStreetMap contributors &copy; CARTO", maxNativeZoom: 20 },
+  voyager: { name: "Carto Voyager", group: "Modern",
+    url: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+    attribution: "&copy; OpenStreetMap contributors &copy; CARTO", maxNativeZoom: 20 },
+  topo: { name: "OpenTopoMap (terrain)", group: "Modern",
     url: "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
-    attribution: "&copy; OpenStreetMap contributors, SRTM | style &copy; OpenTopoMap (CC-BY-SA)",
-    maxZoom: 17,
-  },
-  imagery: {
-    name: "Satellite (Esri)",
+    attribution: "&copy; OpenStreetMap contributors, SRTM | &copy; OpenTopoMap (CC-BY-SA)", maxNativeZoom: 17 },
+  imagery: { name: "Esri Satellite", group: "Modern",
     url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-    attribution: "Esri, Maxar, Earthstar Geographics",
-    maxZoom: 19,
-  },
-  os1900: {
-    name: "OS one-inch 1885–1900 (NLS)",
+    attribution: "Esri, Maxar, Earthstar Geographics", maxNativeZoom: 19 },
+  esritopo: { name: "Esri Topographic", group: "Modern",
+    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
+    attribution: "Esri", maxNativeZoom: 19 },
+  esristreet: { name: "Esri Street", group: "Modern",
+    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
+    attribution: "Esri", maxNativeZoom: 19 },
+  esrinatgeo: { name: "Esri National Geographic", group: "Modern",
+    url: "https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}",
+    attribution: "Esri, National Geographic", maxNativeZoom: 16 },
+  esrigray: { name: "Esri Light Gray", group: "Modern",
+    url: "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+    attribution: "Esri", maxNativeZoom: 16 },
+  nls1inch: { name: "OS 1-inch 1885–1900", group: "Historical (NLS)",
     url: "https://mapseries-tilesets.s3.amazonaws.com/1inch_2nd_ed/{z}/{x}/{y}.png",
-    attribution: "Historical map &copy; National Library of Scotland",
-    maxZoom: 15,
-  },
+    attribution: "Historical map &copy; National Library of Scotland", maxNativeZoom: 15 },
+  nlsbart: { name: "Bartholomew GB ½-inch ~1900", group: "Historical (NLS)",
+    url: "https://mapseries-tilesets.s3.amazonaws.com/bartholomew_great_britain/{z}/{x}/{y}.png",
+    attribution: "Historical map &copy; National Library of Scotland", maxNativeZoom: 15 },
+  nls10k: { name: "OS 1:10,560 1940s–60s", group: "Historical (NLS)",
+    url: "https://mapseries-tilesets.s3.amazonaws.com/os/britain10knatgrid/{z}/{x}/{y}.png",
+    attribution: "Historical map &copy; National Library of Scotland", maxNativeZoom: 15 },
 };
 
 const UK_BOUNDS = L.latLngBounds([49.4, -11.2], [61.2, 2.6]);
@@ -48,7 +67,6 @@ const maps = { a: null, b: null };
 const baseLayers = { a: null, b: null };
 let mode = "single"; // single | dual | swipe
 let modules = []; // { id, dir, manifest, data, on:{a,b}, leaflet:{a,b}, fitted }
-let syncing = false;
 let swipeX = null;
 
 const timeline = { enabled: false, year: null, min: null, max: null };
@@ -63,8 +81,9 @@ const dividerEl = $("#swipe-divider");
 function makeMap(id) {
   const map = L.map(id, {
     maxBounds: UK_BOUNDS.pad(0.1),
-    maxBoundsViscosity: 0.8,
+    maxBoundsViscosity: 1.0, // hard, identical wall on both panes — no differential drift
     minZoom: 5,
+    maxZoom: MAX_ZOOM,
     zoomControl: id === "map-a",
   }).setView(START.center, START.zoom);
   return map;
@@ -75,18 +94,19 @@ function setBase(side, key) {
   if (!map) return;
   if (baseLayers[side]) map.removeLayer(baseLayers[side]);
   const b = BASES[key];
-  baseLayers[side] = L.tileLayer(b.url, { attribution: b.attribution, maxZoom: b.maxZoom }).addTo(map);
+  baseLayers[side] = L.tileLayer(b.url, {
+    attribution: b.attribution,
+    maxNativeZoom: b.maxNativeZoom,
+    maxZoom: MAX_ZOOM,
+  }).addTo(map);
 }
 
+// Leaflet.Sync keeps the two panes locked to an identical view (center + zoom),
+// bidirectionally. With equal-sized panes and identical map options this is
+// pixel-accurate at every zoom level.
 function attachSync() {
-  const follow = (src, dst) => () => {
-    if (syncing) return;
-    syncing = true;
-    dst.setView(src.getCenter(), src.getZoom(), { animate: false });
-    syncing = false;
-  };
-  maps.a.on("move", follow(maps.a, maps.b));
-  maps.b.on("move", follow(maps.b, maps.a));
+  maps.a.sync(maps.b);
+  maps.b.sync(maps.a);
 }
 
 function ensureMapB() {
@@ -118,6 +138,7 @@ function setMode(next) {
   $("#base-a-label").textContent = compare ? "Left" : "Map";
   mapBEl.hidden = !compare;
   dividerEl.hidden = next !== "swipe";
+  $("#dual-divider").hidden = next !== "dual";
   mapBEl.style.clipPath = "";
 
   if (compare) ensureMapB();
@@ -126,9 +147,7 @@ function setMode(next) {
     maps.a.invalidateSize();
     if (maps.b && compare) {
       maps.b.invalidateSize();
-      syncing = true;
       maps.b.setView(maps.a.getCenter(), maps.a.getZoom(), { animate: false });
-      syncing = false;
     }
     if (next === "swipe") {
       if (swipeX == null) swipeX = mapsEl.getBoundingClientRect().width / 2;
@@ -238,7 +257,12 @@ function timeVisible(mod, feature) {
 function buildLayer(mod) {
   const m = mod.manifest;
   if (m.type === "tile") {
-    return L.tileLayer(m.url, { attribution: m.attribution, opacity: m.opacity || 1 });
+    return L.tileLayer(m.url, {
+      attribution: m.attribution,
+      opacity: m.opacity || 1,
+      maxNativeZoom: m.maxNativeZoom,
+      maxZoom: MAX_ZOOM,
+    });
   }
   return L.geoJSON(mod.data, {
     attribution: m.attribution,
@@ -394,14 +418,21 @@ function renderLegend() {
 // ---------------------------------------------------------------- boot
 
 function initBaseSelects() {
+  const groups = {};
+  for (const [key, b] of Object.entries(BASES)) (groups[b.group] ||= []).push([key, b]);
   for (const [side, sel] of [["a", $("#base-a")], ["b", $("#base-b")]]) {
-    for (const [key, b] of Object.entries(BASES)) {
-      const opt = document.createElement("option");
-      opt.value = key;
-      opt.textContent = b.name;
-      sel.appendChild(opt);
+    for (const [gname, items] of Object.entries(groups)) {
+      const og = document.createElement("optgroup");
+      og.label = gname;
+      for (const [key, b] of items) {
+        const opt = document.createElement("option");
+        opt.value = key;
+        opt.textContent = b.name;
+        og.appendChild(opt);
+      }
+      sel.appendChild(og);
     }
-    sel.value = side === "a" ? "osm" : "os1900";
+    sel.value = side === "a" ? "osm" : "nls1inch";
     sel.onchange = () => setBase(side, sel.value);
   }
 }
