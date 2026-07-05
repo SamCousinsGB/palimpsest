@@ -80,6 +80,12 @@ const BASES = {
   nls10k: { name: "OS 1:10,560 1940s–60s", group: "Historical (NLS)",
     url: "https://mapseries-tilesets.s3.amazonaws.com/os/britain10knatgrid/{z}/{x}/{y}.png",
     attribution: "Historical map &copy; National Library of Scotland", maxNativeZoom: 15 },
+  nls1250: { name: "OS 1:1,250 town plans 1940s–60s", group: "Historical (NLS)",
+    url: "https://geo.nls.uk/mapdata3/os/1250_A_1/{z}/{x}/{y}.png",
+    attribution: "Historical map &copy; National Library of Scotland", maxNativeZoom: 20 },
+  nlsbart40: { name: "Bartholomew GB ½-inch 1940s", group: "Historical (NLS)",
+    url: "https://mapseries-tilesets.s3.amazonaws.com/bartholomew/great_britain_1940s/{z}/{x}/{y}.png",
+    attribution: "Historical map &copy; National Library of Scotland", maxNativeZoom: 15 },
 };
 
 const UK_BOUNDS = L.latLngBounds([49.4, -11.2], [61.2, 2.6]);

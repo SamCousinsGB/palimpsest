@@ -18,15 +18,16 @@ patterns and settlement logic.
 - **Linked crosshair** — in side-by-side, hovering one pane mirrors a crosshair
   onto the other at the exact same coordinate, so you can pin precisely where a
   point on one map falls on the other.
-- **23 base maps** in three groups, every URL probe-verified to serve real
-  tiles:
+- **25 base maps** in three groups, every URL probe-verified to serve real
+  tiles over Merseyside:
   - *Street & general* — OpenStreetMap, OSM Humanitarian, OSM France, OSM
     Germany, CyclOSM, ÖPNVKarte transit, Carto Light / Light-no-labels / Dark /
     Voyager, Esri Street, Esri Light Gray.
   - *Terrain, relief & aerial* — Esri Satellite, OpenTopoMap, Esri Topographic /
     National Geographic / Shaded Relief / Terrain / Physical / Ocean.
   - *Historical (NLS)* — OS 1-inch 1885–1900, Bartholomew GB half-inch ~1900,
-    OS 1:10,560 1940s–60s.
+    Bartholomew GB half-inch 1940s, OS 1:10,560 1940s–60s, and OS 1:1,250 town
+    plans 1940s–60s (street-level detail — individual buildings).
 
   Historical sheets upscale past their native zoom so they stay aligned with
   modern maps at any zoom.
@@ -106,8 +107,10 @@ node tools/geocode.mjs tools/places-my-layer.json layers/my-layer/data.geojson
 ## Roadmap
 
 - Georeferenced historical overlays (tithe maps, estate plans) as tile modules
-- More NLS base sheets (6-inch, 25-inch) — these sit behind MapTiler API keys
-  now, so they need a key wired in
+- More NLS base sheets (6-inch 1888–1913, 25-inch) — Scotland-only or behind
+  MapTiler API keys in NLS's free set, so they need a key wired in
+- OpenHistoricalMap as a time-aware base layer (vector tiles — needs MapLibre
+  GL + the Leaflet bridge)
 - Line/polygon modules (Roman roads, drainage and sewer networks, hundred boundaries)
 - Time *ranges* per feature (existed from–to) alongside the current attested-by model
 - Permalink state (mode, layers, year, viewport in the URL hash)
