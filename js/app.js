@@ -9,7 +9,13 @@
 // maxNativeZoom = the deepest zoom the tileset actually serves; Leaflet upscales
 // past it so historical layers stay visible (blurry) when zoomed in and stay
 // aligned with modern panes at every zoom. All layers are EPSG:3857.
-const MAX_ZOOM = 19;
+const MAX_ZOOM = 20;
+// How many zoom levels a base layer may be magnified past its native detail
+// before we stop zooming. 1 = at most 2× upscaling — keeps historical sheets
+// legible and stops a low-detail map (e.g. OS 1-inch) blowing up into mush
+// next to a crisp modern one. This is what keeps the two panes at a real,
+// matching scale in side-by-side.
+const OVERZOOM = 1;
 const BASES = {
   osm: { name: "OpenStreetMap", group: "Street & general",
     url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -99,6 +105,7 @@ let mode = "single"; // single | dual | swipe
 let modules = []; // { id, dir, manifest, data, on:{a,b}, leaflet:{a,b}, fitted }
 let swipeX = null;
 const xhair = { a: null, b: null }; // linked crosshair marker, shown ON maps[side]
+const baseKey = { a: null, b: null }; // currently selected base-map key per side
 
 const timeline = { enabled: false, year: null, min: null, max: null };
 
@@ -125,11 +132,28 @@ function setBase(side, key) {
   if (!map) return;
   if (baseLayers[side]) map.removeLayer(baseLayers[side]);
   const b = BASES[key];
+  baseKey[side] = key;
   baseLayers[side] = L.tileLayer(b.url, {
     attribution: b.attribution,
     maxNativeZoom: b.maxNativeZoom,
     maxZoom: MAX_ZOOM,
   }).addTo(map);
+  applyZoomLimit();
+}
+
+// Cap the shared max zoom so no active base layer is magnified more than
+// OVERZOOM levels past its native detail. In compare modes both panes' base
+// layers are considered, so the coarser (lower-native) map governs — that is
+// what stops the historical pane looking like a different scale from the modern
+// one. Leaflet auto-zooms both maps out if they were already past the new cap.
+function applyZoomLimit() {
+  const keys = [baseKey.a];
+  if (mode !== "single" && baseKey.b) keys.push(baseKey.b);
+  const cap = Math.min(
+    MAX_ZOOM,
+    ...keys.filter(Boolean).map((k) => (BASES[k].maxNativeZoom || MAX_ZOOM) + OVERZOOM)
+  );
+  for (const s of ["a", "b"]) if (maps[s]) maps[s].setMaxZoom(cap);
 }
 
 // Leaflet.Sync keeps the two panes locked to an identical view (center + zoom),
@@ -215,6 +239,7 @@ function setMode(next) {
   if (next !== "dual") { hideXhair("a"); hideXhair("b"); }
 
   if (compare) ensureMapB();
+  applyZoomLimit();
 
   requestAnimationFrame(() => {
     maps.a.invalidateSize();

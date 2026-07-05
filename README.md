@@ -29,8 +29,11 @@ patterns and settlement logic.
     Bartholomew GB half-inch 1940s, OS 1:10,560 1940s–60s, and OS 1:1,250 town
     plans 1940s–60s (street-level detail — individual buildings).
 
-  Historical sheets upscale past their native zoom so they stay aligned with
-  modern maps at any zoom.
+  Zoom is capped so no base map is magnified more than one level past its native
+  detail — this keeps both panes at a real, matching scale in side-by-side
+  rather than blowing a low-detail historical sheet up into blur next to a crisp
+  modern one. The coarser of the two panes governs. For deep, street-level
+  history, the OS 1:1,250 layer carries detail to the highest zooms.
 - **Modular layer library** — every layer is a self-contained folder under
   `layers/`. Add a folder, add one line to the registry, done.
 - **Timeline** — any layer that declares a time field gets a year slider
